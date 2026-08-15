@@ -1,13 +1,11 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
-import { AuthProvider } from '@/contexts/AuthContext';
-import { FinanceDataProvider } from '@/contexts/FinanceDataContext';
-import { ThemeProvider } from '@/contexts/ThemeContext';
-import { AppLayout } from '@/components/layout/AppLayout';
+import { ProvidersWrapper } from './providers-wrapper';
 
 export const metadata: Metadata = {
   title: 'KirosFin - Controle Financeiro Pessoal',
-  description: 'Aplicativo moderno de gestão financeira pessoal, cartões de crédito e metas.',
+  description:
+    'Aplicativo moderno de gestão financeira pessoal, cartões de crédito e metas.',
   manifest: '/manifest.json',
 };
 
@@ -21,19 +19,19 @@ export const viewport: Viewport = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
-      <body className="antialiased selection:bg-sky-500 selection:text-white" suppressHydrationWarning>
-        <ThemeProvider>
-          <AuthProvider>
-            <FinanceDataProvider>
-              <AppLayout>{children}</AppLayout>
-            </FinanceDataProvider>
-          </AuthProvider>
-        </ThemeProvider>
+      <body
+        className="antialiased selection:bg-sky-500 selection:text-white"
+        suppressHydrationWarning
+      >
+        {/*
+          ProvidersWrapper is a Client Component that loads ClientRoot with ssr:false.
+          This prevents @supabase/ssr createBrowserClient from running during
+          static prerendering at build time (Vercel build).
+        */}
+        <ProvidersWrapper>{children}</ProvidersWrapper>
       </body>
     </html>
   );
